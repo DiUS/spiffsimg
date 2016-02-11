@@ -221,9 +221,9 @@ int main (int argc, char *argv[])
   if (sz & (LOG_PAGE_SIZE -1))
     die ("file size not multiple of page size");
 
-  flash = mmap (0, sz, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+  flash = malloc(sz);
   if (!flash)
-    die ("mmap");
+    die ("malloc");
 
   if (create)
     memset (flash, 0xff, sz);
@@ -324,7 +324,9 @@ int main (int argc, char *argv[])
   }
 
   SPIFFS_unmount (&fs);
-  munmap (flash, sz);
+  lseek(fd, 0, SEEK_SET);
+  write(fd, flash, sz);
   close (fd);
+  free(flash);
   return retcode;
 }
