@@ -221,7 +221,7 @@ int main (int argc, char *argv[])
   if (sz & (LOG_PAGE_SIZE -1))
     die ("file size not multiple of page size");
 
-  flash = malloc(sz);
+  flash = (uint8_t *)malloc(sz);
   if (!flash)
     die ("malloc");
 
